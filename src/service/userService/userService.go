@@ -1,6 +1,6 @@
 package userService
 
-import "gin-web/src/dto/reqDto"
+import "gin-ck/src/dto/reqDto"
 
 // import (
 //

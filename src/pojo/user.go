@@ -2,9 +2,9 @@ package pojo
 
 import (
 	"errors"
-	"gin-web/src/dto/reqDto"
-	"gin-web/src/dto/resDto"
-	"gin-web/src/util"
+	"gin-ck/src/dto/reqDto"
+	"gin-ck/src/dto/resDto"
+	util "gin-ck/src/utils"
 	"gorm.io/gorm"
 )
 

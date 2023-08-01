@@ -1,13 +1,11 @@
 package casbinService
 
 import (
-	"HelloGin/src/dto/reqDto"
-	"HelloGin/src/global"
-	"HelloGin/src/pojo"
-	"HelloGin/src/util"
+	"gin-ck/src/dto/reqDto"
+	"gin-ck/src/global"
+	util "gin-ck/src/utils"
 )
 
-var ruleServiceImpl = pojo.RbacRule()
 var err error
 
 /**
@@ -46,10 +44,6 @@ func CasbinGroupDel() {
 }
 
 func CheckRuleName(id uint) (error, string) {
-	var rule = &pojo.Rule{}
-	err, rule = ruleServiceImpl.FindRoleName(id)
-	if err != nil {
-		return err, ""
-	}
-	return nil, rule.Name
+
+	return nil, ""
 }
