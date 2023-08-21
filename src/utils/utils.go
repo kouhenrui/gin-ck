@@ -2,11 +2,14 @@ package util
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"gin-ck/src/dto/reqDto"
 	"gin-ck/src/global"
+	"github.com/go-playground/validator/v10"
 	"github.com/mojocn/base64Captcha"
 	"image/color"
+	"reflect"
 	"regexp"
 )
 
@@ -21,6 +24,33 @@ func UnMarshal(r []byte, res interface{}) (bool, interface{}) {
 		return false, REDIS_INFORMATION_ERROR
 	}
 	return true, res
+}
+
+/*
+ * @MethodName 参数验证
+ * @Description
+ * @Author khr
+ * @Date 2023/8/21 10:21
+ */
+func GetValidate(err error, obj any) error {
+
+	invalid, ok := err.(*validator.InvalidValidationError)
+	if ok {
+		fmt.Println("param error:", invalid)
+		return invalid
+	}
+	//反射获取标签的注释
+	getObj := reflect.TypeOf(obj)
+	if errs, ok := err.(validator.ValidationErrors); ok {
+		return errs
+		for _, e := range errs {
+			if f, exist := getObj.Elem().FieldByName(e.Field()); exist {
+				msg := f.Tag.Get("msg")
+				return errors.New(msg)
+			}
+		}
+	}
+	return err
 }
 
 /*
