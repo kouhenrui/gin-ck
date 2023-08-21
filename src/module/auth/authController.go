@@ -1,6 +1,8 @@
 package auth
 
 import (
+	"gin-ck/src/dto/reqDto"
+	"gin-ck/src/service/authService"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -12,25 +14,27 @@ import (
  * @Date 2023/7/31 16:56
  * @Version 1.0
  */
+
+var (
+	authServiceImpl = authService.AuthService{}
+)
+
 func Login(c *gin.Context) {
-	var logins login
+	var logins reqDto.Login
 	if err := c.ShouldBindJSON(&logins); err != nil {
-		//errs, ok := err.(validator.ValidationErrors)
-		//if !ok {
-		//	c.Error(err)
-		//	return
-		//}
 		c.AbortWithError(http.StatusBadRequest, err)
-		//c.Error(err)
 		return
 	}
-	c.Set("response", logins.Name)
+	//异步线程操作
+	resErr := make(chan error)
+	resData := make(chan interface{})
+	go authServiceImpl.Login(logins, resData, resErr)
+	endErr := <-resErr
+	endData := <-resData
+	if endErr != nil {
+		c.Error(endErr)
+		return
+	}
+	c.Set("res", endData)
 	return
-	//c.AbortWithError(500, errors.New("我不知道哪里错了"))
-	//c.Error(errors.New("我不知道哪里错了"))
-	//return
-}
-
-type login struct {
-	Name string `json:"name,omitempty" binding:"required" message:"名称不为空"`
 }

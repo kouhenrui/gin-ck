@@ -89,6 +89,7 @@ func GlobalErrorMiddleware() gin.HandlerFunc {
 					Message: errorMessage,
 					Data:    nil,
 				})
+				return
 				c.Abort()
 
 				//c.JSON(http.StatusOK, gin.H{
@@ -97,7 +98,7 @@ func GlobalErrorMiddleware() gin.HandlerFunc {
 				//	"message": errorMessage,
 				//	"data":    "",
 				//})
-				return
+				//return
 			}
 		}()
 
@@ -130,7 +131,7 @@ func UnifiedResponseMiddleware() gin.HandlerFunc {
 		}
 		fmt.Println("格式化返回")
 		if c.Writer.Status() == http.StatusOK {
-			data, exists := c.Get("response")
+			data, exists := c.Get("res")
 			if exists {
 				// Wrap the response data in a standardized format
 				c.JSON(http.StatusOK, &comDto.ResponseData{
